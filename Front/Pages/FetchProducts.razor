@@ -1,0 +1,59 @@
+@page "/fetchproducts"
+@inject HttpClient http
+
+
+<h3>Product List</h3>
+<!--generated with copilot-->
+<ul>
+   @if (products != null)
+    {
+        @foreach(var product in products)
+        {
+            <li>@product.Name - $@product.Price (Category: @product.Category.Name)</li>
+        }
+    }
+    else if (errorMessage != null)
+    {
+        <li>@errorMessage</li>
+    }
+    else
+    {
+        <li>Loading...</li>
+    }
+</ul>
+
+@code {
+    private Product[]? products;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //generated with copilot
+
+        try
+        {
+            products = await http.GetFromJsonAsync<Product[]>("api/productlist");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error fetching products: {ex.Message}";
+        }
+    }
+
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public double Price { get; set; }
+        public int Stock { get; set; }
+
+        //generated with copilot
+        public Category Category { get; set; }
+    }
+//generated with copilot
+    public class Category
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+}
